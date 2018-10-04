@@ -1,36 +1,36 @@
 ##
 ## EPITECH PROJECT, 2018
-## lul
+## Makefile
 ## File description:
-## lul
+## Makefile
 ##
-
-INC_DIR		=	include/
 
 SRC_DIR		=	src/
 
-SRC			=	$(SRC_DIR)main.c
+INC_DIR		=	include/
 
-OBJ			=	$(SRC:.c=.o)
+SRC		=	$(SRC_DIR)main.c	\
+			$(SRC_DIR)random_killer.c
 
-CFLAGS		+= -W -Wall -Wextra \
-			-I $(INC_DIR)
+OBJ		=	$(SRC:.c=.o)
 
-LDFLAGS		+= -lncurses
+CFLAGS		+=	-W -Wall -Wextra	\
+			-I $(INC_DIR)	\
+			-O3
 
-NAME		=	funny_game
+NAME		=	funkill
 
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-			$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+		$(CC) -o $(NAME) $(OBJ)
 
 clean:
-			@rm -f $(OBJ)
+		@rm -f $(OBJ)
 
 fclean:		clean
-			@rm -f $(NAME)
+		@rm -f $(NAME)
 
-re:			fclean all
+re:		fclean all
 
 .PHONY:		all clean fclean re

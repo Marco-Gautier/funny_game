@@ -6,8 +6,10 @@
 */
 
 #include <ncurses.h>
+#include "game.h"
 
-int main()
+int main(void)
 {
-    return (0);
+	random_killer();
+	return 0;
 }
