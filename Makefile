@@ -25,6 +25,9 @@ all:		$(NAME)
 $(NAME):	$(OBJ)
 		$(CC) -o $(NAME) $(OBJ)
 
+safe:		CFLAGS += -D SAFE
+safe:		re
+
 clean:
 		@rm -f $(OBJ)
 

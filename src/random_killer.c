@@ -61,6 +61,9 @@ void random_killer(void)
 		printf("The next death will be %d and is called %s\n",
 		       next_pid, next_process);
 		sleep(1);
+
+#ifndef SAFE
 		kill(next_pid, SIGKILL);
+#endif
 	}
 }
