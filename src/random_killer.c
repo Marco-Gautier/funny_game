@@ -13,6 +13,18 @@
 #include <string.h>
 #include <unistd.h>
 
+int get_pid_max(void)
+{
+	char buff[16];
+	int fd = open("/proc/sys/kernel/pid_max", O_RDONLY);
+
+	if (fd == -1)
+		return perror(NULL), 0;
+	if (read(fd, buff, sizeof(buff)) == -1)
+		return perror(NULL), 0;
+	return atoi(buff);
+}
+
 char *get_process_name(pid_t pid)
 {
 	int fd;
@@ -26,23 +38,12 @@ char *get_process_name(pid_t pid)
 	if (fd == -1)
 		return NULL;
 	if (read(fd, name, sizeof(name)) == -1)
-		return NULL;
+		return perror(NULL), NULL;
+	close(fd);
 	tmp = strchr(name, ' ');
 	if (tmp)
 		*tmp = '\0';
 	return strdup(name);
-}
-
-int get_pid_max(void)
-{
-	char buff[16];
-	int fd = open("/proc/sys/kernel/pid_max", O_RDONLY);
-
-	if (fd == -1)
-		return perror(NULL), 0;
-	if (read(fd, buff, sizeof(buff)) == -1)
-		return perror(NULL), 0;
-	return atoi(buff);
 }
 
 void random_killer(void)
@@ -56,14 +57,15 @@ void random_killer(void)
 	while (1) {
 		next_pid = rand() % pid_max;
 		next_process = get_process_name(next_pid);
-		if (!next_process || *next_process == '\0')
-			continue;
-		printf("The next death will be %d and is called %s\n",
-		       next_pid, next_process);
-		sleep(1);
+		if (next_process && *next_process) {
+			printf("The next death will be %d and is called %s\n",
+			       next_pid, next_process);
+			sleep(1);
 
 #ifndef SAFE
-		kill(next_pid, SIGKILL);
+			kill(next_pid, SIGKILL);
 #endif
+		}
+		free(next_process);
 	}
 }
