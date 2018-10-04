@@ -19,9 +19,9 @@ int get_pid_max(void)
 	int fd = open("/proc/sys/kernel/pid_max", O_RDONLY);
 
 	if (fd == -1)
-		return perror(NULL), 0;
+		return 0;
 	if (read(fd, buff, sizeof(buff)) == -1)
-		return perror(NULL), 0;
+		return 0;
 	return atoi(buff);
 }
 
@@ -38,7 +38,7 @@ char *get_process_name(pid_t pid)
 	if (fd == -1)
 		return NULL;
 	if (read(fd, name, sizeof(name)) == -1)
-		return perror(NULL), NULL;
+		return NULL;
 	close(fd);
 	tmp = strchr(name, ' ');
 	if (tmp)
