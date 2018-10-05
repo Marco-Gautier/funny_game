@@ -5,6 +5,8 @@
 ## Makefile
 ##
 
+CC		=	gcc
+
 SRC_DIR		=	src/
 
 INC_DIR		=	include/
@@ -16,14 +18,15 @@ OBJ		=	$(SRC:.c=.o)
 
 CFLAGS		+=	-W -Wall -Wextra	\
 			-I $(INC_DIR)	\
-			-O3
+			-O3 -g3		\
+			-lncurses
 
 NAME		=	funkill
 
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-		$(CC) -o $(NAME) $(OBJ)
+		$(CC) -o  $(NAME) $(OBJ) $(CFLAGS) 
 
 safe:		CFLAGS += -D SAFE
 safe:		re
