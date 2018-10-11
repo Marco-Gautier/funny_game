@@ -12,14 +12,16 @@ SRC_DIR		=	src/
 INC_DIR		=	include/
 
 SRC		=	$(SRC_DIR)main.c	\
-			$(SRC_DIR)random_killer.c
+			$(SRC_DIR)get_random_process.c
 
 OBJ		=	$(SRC:.c=.o)
 
 CFLAGS		+=	-W -Wall -Wextra	\
-			-I $(INC_DIR)	\
-			-O3 -g3		\
-			-lncurses	\
+			-I $(INC_DIR)		\
+			-O3			\
+			-g			\
+
+LDFLAGS		+=	-lncurses		\
 			-lpthread
 
 NAME		=	funkill
@@ -27,7 +29,7 @@ NAME		=	funkill
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-		$(CC) -o  $(NAME) $(OBJ) $(CFLAGS) 
+		$(CC) -o  $(NAME) $(OBJ) $(LDFLAGS)
 
 safe:		CFLAGS += -D SAFE
 safe:		re

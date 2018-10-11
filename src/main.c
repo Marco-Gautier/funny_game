@@ -5,19 +5,15 @@
 ** lul
 */
 
+#include <fcntl.h>
 #include <ncurses.h>
-#include <stdlib.h>
-#include <time.h>
-#include "game.h"
-
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#include <signal.h>
-#include <unistd.h>
-#include <stdbool.h>
-
 #include <pthread.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+#include "game.h"
 
 void init_curses(void)
 {
@@ -90,13 +86,33 @@ void game()
 		if (typed == 'q')
 			return;
 		x = get_x(typed, x);
-		print_container(container, x);	
+		print_container(container, x);
 	}
 	pthread_join(tid, NULL);
 }
 
+int get_pid_max(void)
+{
+	char buff[16];
+	int fd = open("/proc/sys/kernel/pid_max", O_RDONLY);
+
+	if (fd == -1)
+		return 0;
+	if (read(fd, buff, sizeof(buff)) == -1)
+		return 0;
+	return atoi(buff);
+}
+
 int main(void)
 {
+	int pid_max = get_pid_max();
+	struct target process = get_random_process(pid_max);
+
+	printf("pid: %d\n", process.pid);
+	printf("name: %s\n", process.name);
+	printf("pos_y: %d\n", process.pos_y);
+	printf("pos_x: %d\n", process.pos_x);
+
 	init_curses();
 	game();
 	endwin();
