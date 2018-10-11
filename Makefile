@@ -19,7 +19,8 @@ OBJ		=	$(SRC:.c=.o)
 CFLAGS		+=	-W -Wall -Wextra	\
 			-I $(INC_DIR)	\
 			-O3 -g3		\
-			-lncurses
+			-lncurses	\
+			-lpthread
 
 NAME		=	funkill
 

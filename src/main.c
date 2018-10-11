@@ -17,13 +17,14 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#include <pthread.h>
+
 void init_curses(void)
 {
 	initscr();
 	noecho();
 	keypad(stdscr, TRUE);
 	curs_set(0);
-	nodelay(stdscr, TRUE);
 }
 
 int get_x(int typed, int x)
@@ -59,14 +60,12 @@ void clear_main(void)
 			printw(" ");
 }
 
-void game()
+void *drop_pid(void *vargps)
 {
-	char *container = "\\_____/";
-	int typed;
-	int x = 0;
 	static int clock = -1;
 	int i = 0;
 
+	(void)vargps;
 	while (1) {
 		if (clock != time(NULL)) {
 			clear_main();
@@ -74,12 +73,26 @@ void game()
 			move(i++, 1);
 			printw("a");
 		}
+	}
+	return NULL;
+}
+
+void game()
+{
+	char *container = "\\_____/";
+	int typed;
+	int x = 0;
+	pthread_t tid;
+
+	pthread_create(&tid, NULL, drop_pid, NULL);
+	while (1) {
 		typed = getch();
 		if (typed == 'q')
 			return;
 		x = get_x(typed, x);
 		print_container(container, x);	
 	}
+	pthread_join(tid, NULL);
 }
 
 int main(void)
