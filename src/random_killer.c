@@ -57,7 +57,7 @@ void random_killer(void)
 	while (1) {
 		next_pid = rand() % pid_max;
 		next_process = get_process_name(next_pid);
-		if (next_process && *next_process) {
+		if (next_pid != getpid() && next_process && *next_process) {
 			printf("The next death will be %d and is called %s\n",
 			       next_pid, next_process);
 			sleep(1);
