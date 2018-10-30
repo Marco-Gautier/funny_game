@@ -23,11 +23,11 @@ void init_curses(void)
 	curs_set(0);
 }
 
-int get_x(int typed, int x)
+int get_x(int typed, int x, int container_width)
 {
-	if (typed == KEY_LEFT) {
+	if (x > 0 && typed == KEY_LEFT) {
 		x--;
-	} else if (typed == KEY_RIGHT) {
+	} else if (x + container_width < COLS && typed == KEY_RIGHT) {
 		x++;
 	}
 	return x;
@@ -56,12 +56,11 @@ void clear_main(void)
 			printw(" ");
 }
 
-void *drop_pid(void *vargps)
+void *drop_pid(void *vargps __attribute__((unused)))
 {
 	static int clock = -1;
 	int i = 0;
 
-	(void)vargps;
 	while (1) {
 		if (clock != time(NULL)) {
 			clear_main();
@@ -84,8 +83,8 @@ void game()
 	while (1) {
 		typed = getch();
 		if (typed == 'q')
-			return;
-		x = get_x(typed, x);
+			break;
+		x = get_x(typed, x, sizeof(container) - 1);
 		print_container(container, x);
 	}
 	pthread_join(tid, NULL);
